@@ -1,26 +1,181 @@
 @import "tailwindcss";
 
+/* -------------------------------------------------------------------------- */
+/*  MITHRA design tokens                                                      */
+/*  Light theme is the default. Dark theme applies automatically via the OS   */
+/*  preference, or explicitly with <html data-theme="dark">. Setting          */
+/*  data-theme="light" forces the light theme regardless of OS preference.    */
+/* -------------------------------------------------------------------------- */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  --background: #f6f6fd;
+  --foreground: #0c0f2e;
+  --surface: #ffffff;
+  --surface-muted: #eef0fb;
+  --border: #e1e3f4;
+  --muted: #565b80;
+
+  --brand: #5551ee;
+  --brand-strong: #4338ca;
+  --brand-soft: #e8e8ff;
+  --violet: #8b5cf6;
+  --navy: #0b1030;
+  --success: #10b981;
+
+  --bubble-in: #ffffff;
+  --bubble-in-foreground: #0c0f2e;
+  --glow: rgb(99 102 241 / 0.28);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --background: #070a1f;
+  --foreground: #eef0ff;
+  --surface: #0e1230;
+  --surface-muted: #141a3d;
+  --border: #232a55;
+  --muted: #9aa0c8;
+
+  --brand: #7c7cff;
+  --brand-strong: #a5a8ff;
+  --brand-soft: #1d2253;
+  --violet: #a78bfa;
+  --navy: #04061a;
+  --success: #34d399;
+
+  --bubble-in: #1a2048;
+  --bubble-in-foreground: #eef0ff;
+  --glow: rgb(124 124 255 / 0.22);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --background: #070a1f;
+    --foreground: #eef0ff;
+    --surface: #0e1230;
+    --surface-muted: #141a3d;
+    --border: #232a55;
+    --muted: #9aa0c8;
+
+    --brand: #7c7cff;
+    --brand-strong: #a5a8ff;
+    --brand-soft: #1d2253;
+    --violet: #a78bfa;
+    --navy: #04061a;
+    --success: #34d399;
+
+    --bubble-in: #1a2048;
+    --bubble-in-foreground: #eef0ff;
+    --glow: rgb(124 124 255 / 0.22);
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-violet: var(--violet);
+  --color-navy: var(--navy);
+  --color-success: var(--success);
+
+  --color-bubble-in: var(--bubble-in);
+  --color-bubble-in-foreground: var(--bubble-in-foreground);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --animate-float: mithra-float 7s ease-in-out infinite;
+  --animate-fade-up: mithra-fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-typing: mithra-typing 1.3s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes mithra-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes mithra-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mithra-typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+/* Subtle grid backdrop used behind hero content. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--border) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border) 70%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 70%);
+}
+
+@layer base {
+  html {
+    scroll-padding-top: 5.5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--brand) 30%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
